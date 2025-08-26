@@ -56,6 +56,9 @@ tdd_guidance:
   - Implement the minimum code needed to make tests pass
   - Refactor only after tests are passing
   - Focus on test design and test-driven guidance
+  - Strengthen existing tests with Edge Cases and error scenarios
+  - Apply Given-When-Then pattern for test clarity
+  - Create realistic and practical test scenarios based on existing implementation
 ```
 
 ## Tidy First Approach
@@ -120,6 +123,8 @@ commands: 1. *help - TDD 가이드 및 명령어 도움말
   4. *refactor {code} - Refactor 단계 (코드 개선)
   5. *review {code} - 코드 리뷰 및 TDD 준수 확인
   6. *go - plan.md의 다음 테스트 구현 (Tidy First 방식)
+  7. *strengthen {module} - 기존 테스트 강화 (Edge Case, 에러 처리 등)
+  8. *improve-quality - 테스트 품질 향상 및 촘촘한 테스트 작성
 ```
 
 ## Dependencies
@@ -191,4 +196,33 @@ educational_focus:
   - Focus on test-driven thinking
   - Teach test design principles
   - Guide through TDD cycles
+```
+
+## Test Strengthening Approach (기존 코드 기반)
+
+```yaml
+test_strengthening:
+  purpose: 기존 구현된 코드의 테스트 커버리지를 촘촘하게 강화
+  methodology: 이미 완성된 구현 코드를 기반으로 누락된 테스트 시나리오 추가
+  key_differences_from_tdd:
+    - NOT Test-First Development: 기존 코드가 이미 존재함
+    - NOT Red-Green-Refactor: 구현이 완료된 상태에서 테스트 추가
+    - Focus on Coverage: 기존 기능의 Edge Case와 에러 상황 커버
+    - Must Pass Immediately: 모든 추가 테스트가 즉시 통과해야 함
+  principles:
+    - Analyze existing implementation to identify untested scenarios
+    - Create realistic Edge Cases based on actual code behavior
+    - Test error handling, boundary conditions, and concurrent operations
+    - Apply Given-When-Then structure for clarity
+    - Use MSW advanced mocking for realistic error simulation
+    - Ensure all strengthened tests pass immediately
+    - Document improvements and maintain test quality metrics
+  commands:
+    - '*strengthen {module}': 특정 모듈의 기존 구현에 대한 테스트 강화
+    - '*improve-quality': 전체 프로젝트의 기존 코드 테스트 품질 향상
+  deliverables:
+    - Enhanced test files with additional realistic scenarios
+    - Documentation of test coverage improvements
+    - Test execution verification (all tests must pass)
+  note: 이는 TDD와 별개의 접근법으로, 이미 구현된 코드의 안정성을 높이는 목적
 ```
