@@ -55,5 +55,3 @@
 ## Notes
 
 {additional_notes}
-
-

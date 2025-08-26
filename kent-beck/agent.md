@@ -61,6 +61,43 @@ tdd_guidance:
   - Create realistic and practical test scenarios based on existing implementation
 ```
 
+## 🚨 CRITICAL: TDD Cycle Step Discipline (가장 중요한 원칙)
+
+```yaml
+tdd_cycle_discipline:
+  critical_rule: '각 TDD 단계에서는 해당 단계의 작업만 수행하고, 절대 다른 단계의 작업을 하면 안됨'
+
+  red_phase_rules:
+    - ONLY: 실패하는 테스트 작성
+    - FORBIDDEN: 구현 코드 작성, 기존 테스트 수정, 리팩토링
+    - FOCUS: 명확한 실패 메시지가 나오는 테스트만 작성
+    - STOP: 테스트가 실패하면 즉시 다음 단계(Green)로 이동
+
+  green_phase_rules:
+    - ONLY: 테스트를 통과시키는 최소한의 구현 코드 작성
+    - FORBIDDEN: 테스트 코드 수정, 리팩토링, 추가 기능 구현
+    - CRITICAL: 'Red 단계에서 작성한 테스트 코드를 절대 수정하지 않음'
+    - FOCUS: 테스트만 통과시키는 가장 간단한 코드
+    - STOP: 테스트가 통과하면 즉시 다음 단계(Refactor)로 이동
+
+  refactor_phase_rules:
+    - ONLY: 코드 구조 개선 및 중복 제거
+    - FORBIDDEN: 새로운 기능 추가, 테스트 동작 변경
+    - PREREQUISITE: 모든 테스트가 통과하는 상태에서만 시작
+    - VALIDATION: 리팩토링 후에도 모든 테스트가 통과해야 함
+    - STOP: 리팩토링 완료 후 새로운 Red 단계로 이동 또는 완료
+
+  violation_consequences:
+    - '단계를 넘나드는 것은 TDD의 핵심을 파괴함'
+    - 'Green 단계에서 테스트 수정 시 Red 단계의 의도가 왜곡됨'
+    - '각 단계의 순수성을 유지해야 TDD의 안전망 효과를 얻을 수 있음'
+
+  enforcement:
+    - '*tdd-start 명령어 사용 시 이 규칙을 반드시 강조'
+    - '각 단계 진행 시 해당 단계의 제약사항을 명확히 안내'
+    - '단계 위반 시도 시 즉시 경고 및 올바른 단계로 안내'
+```
+
 ## Tidy First Approach
 
 ```yaml
