@@ -13,7 +13,17 @@ export const useEventForm = (initialEvent?: Event) => {
   const [description, setDescription] = useState(initialEvent?.description || '');
   const [location, setLocation] = useState(initialEvent?.location || '');
   const [category, setCategory] = useState(initialEvent?.category || '업무');
-  const [isRepeating, setIsRepeating] = useState(initialEvent?.repeat.type !== 'none');
+  const [isRepeating, setIsRepeating] = useState(false);
+  
+  // 반복 체크박스 상태 변경 시 repeatType 동기화
+  const handleIsRepeatingChange = (checked: boolean) => {
+    setIsRepeating(checked);
+    if (checked && repeatType === 'none') {
+      setRepeatType('daily');
+    } else if (!checked) {
+      setRepeatType('none');
+    }
+  };
   const [repeatType, setRepeatType] = useState<RepeatType>(initialEvent?.repeat.type || 'none');
   const [repeatInterval, setRepeatInterval] = useState(initialEvent?.repeat.interval || 1);
   const [repeatEndDate, setRepeatEndDate] = useState(initialEvent?.repeat.endDate || '');
@@ -85,7 +95,7 @@ export const useEventForm = (initialEvent?: Event) => {
     category,
     setCategory,
     isRepeating,
-    setIsRepeating,
+    setIsRepeating: handleIsRepeatingChange,
     repeatType,
     setRepeatType,
     repeatInterval,
