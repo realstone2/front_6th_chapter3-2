@@ -1,4 +1,12 @@
-import { Notifications, ChevronLeft, ChevronRight, Delete, Edit, Close } from '@mui/icons-material';
+import {
+  Notifications,
+  ChevronLeft,
+  ChevronRight,
+  Delete,
+  Edit,
+  Close,
+  Repeat,
+} from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
@@ -51,6 +59,14 @@ import { getTimeErrorMessage } from './utils/timeValidation';
 const categories = ['업무', '개인', '가족', '기타'];
 
 const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+
+// 이벤트 상태 아이콘들을 표시하는 컴포넌트
+const EventStatusIcons = ({ event, isNotified }: { event: Event; isNotified: boolean }) => (
+  <>
+    {isNotified && <Notifications fontSize="small" />}
+    {event.repeat.type !== 'none' && <Repeat fontSize="small" data-testid="repeat-icon" />}
+  </>
+);
 
 const notificationOptions = [
   { value: 1, label: '1분 전' },
@@ -200,7 +216,7 @@ function App() {
                             }}
                           >
                             <Stack direction="row" spacing={1} alignItems="center">
-                              {isNotified && <Notifications fontSize="small" />}
+                              <EventStatusIcons event={event} isNotified={isNotified} />
                               <Typography
                                 variant="caption"
                                 noWrap
@@ -287,7 +303,7 @@ function App() {
                                   }}
                                 >
                                   <Stack direction="row" spacing={1} alignItems="center">
-                                    {isNotified && <Notifications fontSize="small" />}
+                                    <EventStatusIcons event={event} isNotified={isNotified} />
                                     <Typography
                                       variant="caption"
                                       noWrap
