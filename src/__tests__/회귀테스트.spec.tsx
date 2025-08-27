@@ -123,7 +123,9 @@ describe('회귀테스트: 반복일정과 기존 단일일정 충돌 검사', (
     // 일정이 성공적으로 생성되었는지 확인
     await screen.findByText('일정이 추가되었습니다.');
   });
+});
 
+describe('회귀테스트: 검색 기능', () => {
   it('반복일정이 검색 기능에 정상적으로 포함된다', async () => {
     // Given: 반복 일정과 단일 일정이 혼재함
     const existingEvents: Event[] = [
@@ -232,7 +234,9 @@ describe('회귀테스트: 반복일정과 기존 단일일정 충돌 검사', (
     expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
     expect(screen.queryByText('매일 스탠드업')).not.toBeInTheDocument();
   });
+});
 
+describe('회귀테스트: 알림 기능', () => {
   it('반복일정에 대한 알림이 각 일정마다 정상 동작한다', async () => {
     // Given: 반복 일정들이 존재함
     const now = new Date('2025-10-15T08:50:00'); // 8시 50분
@@ -267,7 +271,7 @@ describe('회귀테스트: 반복일정과 기존 단일일정 충돌 검사', (
 
     setupMockHandlerCreation(repeatEvents);
 
-    const { user } = setup(<App />);
+    setup(<App />);
 
     // 일정 로딩 대기
     await screen.findByText('일정 로딩 완료!');
