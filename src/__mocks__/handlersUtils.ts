@@ -139,6 +139,18 @@ export const setupMockHandlerListCreation = (initEvents = [] as Event[]) => {
         return HttpResponse.json(mockEvents[index]);
       }
       return new HttpResponse('Event not found', { status: 404 });
+    }),
+    // 일정 삭제 (반복 일정 단일 삭제 지원)
+    http.delete('/api/events/:id', async ({ params }) => {
+      const { id } = params;
+      const index = mockEvents.findIndex((event) => event.id === id);
+
+      if (index > -1) {
+        // 해당 일정만 삭제 (반복 시리즈에서 단일 삭제)
+        const deletedEvent = mockEvents.splice(index, 1)[0];
+        return HttpResponse.json(deletedEvent);
+      }
+      return new HttpResponse('Event not found', { status: 404 });
     })
   );
 };

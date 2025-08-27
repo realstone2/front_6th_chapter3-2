@@ -150,6 +150,142 @@ describe('UI 반복 아이콘 표시/제거 검증', () => {
   });
 });
 
+describe('반복 일정 단일 삭제 기능', () => {
+  it('반복 일정을 삭제하면 해당 일정만 삭제된다', async () => {
+    // Given: 반복 일정이 여러 개 존재함
+    setupMockHandlerListCreation();
+    const { result } = renderHook(() => useEventOperations(false, vi.fn()));
+
+    // 1단계: 매일 반복 일정 생성 (여러 일정이 생성됨)
+    const dailyEventForm = createMockRepeatEventForm({
+      title: '매일 스탠드업',
+      date: '2025-10-15',
+      repeat: { type: 'daily', interval: 1, endDate: '2025-10-17' }, // 3일간 반복
+    });
+
+    await act(async () => {
+      await result.current.saveEvent(dailyEventForm);
+    });
+
+    // 반복 일정들이 생성되었는지 확인
+    await waitFor(() => {
+      const standupEvents = result.current.events.filter((e) => e.title === '매일 스탠드업');
+      expect(standupEvents.length).toBe(3); // 10/15, 10/16, 10/17
+    });
+
+    // 2단계: 특정 날짜의 반복 일정만 삭제
+    const eventsToDelete = result.current.events.filter((e) => e.title === '매일 스탠드업');
+    const middleEvent = eventsToDelete.find((e) => e.date === '2025-10-16');
+    expect(middleEvent).toBeDefined();
+
+    // When: 특정 날짜(10/16)의 반복 일정만 삭제
+    await act(async () => {
+      await result.current.deleteEvent(middleEvent!.id);
+    });
+
+    // Then: 해당 날짜만 삭제되고 다른 반복 일정은 유지됨
+    await waitFor(() => {
+      const remainingEvents = result.current.events.filter((e) => e.title === '매일 스탠드업');
+      expect(remainingEvents.length).toBe(2); // 10/15, 10/17만 남음
+
+      const deletedEvent = remainingEvents.find((e) => e.date === '2025-10-16');
+      expect(deletedEvent).toBeUndefined(); // 10/16은 삭제됨
+
+      const firstEvent = remainingEvents.find((e) => e.date === '2025-10-15');
+      const lastEvent = remainingEvents.find((e) => e.date === '2025-10-17');
+      expect(firstEvent).toBeDefined(); // 10/15는 유지됨
+      expect(lastEvent).toBeDefined(); // 10/17은 유지됨
+    });
+  });
+
+  it('반복 일정의 첫 번째 일정을 삭제해도 나머지는 유지된다', async () => {
+    // Given: 주간 반복 일정이 존재함
+    setupMockHandlerListCreation();
+    const { result } = renderHook(() => useEventOperations(false, vi.fn()));
+
+    const weeklyEventForm = createMockRepeatEventForm({
+      title: '주간 미팅',
+      date: '2025-10-15',
+      repeat: { type: 'weekly', interval: 1, endDate: '2025-10-29' }, // 3주간 반복
+    });
+
+    await act(async () => {
+      await result.current.saveEvent(weeklyEventForm);
+    });
+
+    // 주간 반복 일정들이 생성되었는지 확인
+    await waitFor(() => {
+      const weeklyEvents = result.current.events.filter((e) => e.title === '주간 미팅');
+      expect(weeklyEvents.length).toBe(3); // 10/15, 10/22, 10/29
+    });
+
+    // When: 첫 번째 반복 일정을 삭제
+    const eventsToDelete = result.current.events.filter((e) => e.title === '주간 미팅');
+    const firstEvent = eventsToDelete.find((e) => e.date === '2025-10-15');
+
+    await act(async () => {
+      await result.current.deleteEvent(firstEvent!.id);
+    });
+
+    // Then: 첫 번째만 삭제되고 나머지는 유지됨
+    await waitFor(() => {
+      const remainingEvents = result.current.events.filter((e) => e.title === '주간 미팅');
+      expect(remainingEvents.length).toBe(2); // 10/22, 10/29만 남음
+
+      const deletedEvent = remainingEvents.find((e) => e.date === '2025-10-15');
+      expect(deletedEvent).toBeUndefined(); // 10/15는 삭제됨
+
+      const secondEvent = remainingEvents.find((e) => e.date === '2025-10-22');
+      const thirdEvent = remainingEvents.find((e) => e.date === '2025-10-29');
+      expect(secondEvent).toBeDefined(); // 10/22는 유지됨
+      expect(thirdEvent).toBeDefined(); // 10/29는 유지됨
+    });
+  });
+
+  it('반복 일정의 마지막 일정을 삭제해도 나머지는 유지된다', async () => {
+    // Given: 반복 일정이 존재함
+    setupMockHandlerListCreation();
+    const { result } = renderHook(() => useEventOperations(false, vi.fn()));
+
+    const monthlyEventForm = createMockRepeatEventForm({
+      title: '월간 보고',
+      date: '2025-10-15',
+      repeat: { type: 'monthly', interval: 1, endDate: '2025-12-15' }, // 3개월간 반복
+    });
+
+    await act(async () => {
+      await result.current.saveEvent(monthlyEventForm);
+    });
+
+    // When: 마지막 반복 일정을 삭제
+    await waitFor(() => {
+      const monthlyEvents = result.current.events.filter((e) => e.title === '월간 보고');
+      expect(monthlyEvents.length).toBe(3); // 10/15, 11/15, 12/15
+    });
+
+    const eventsToDelete = result.current.events.filter((e) => e.title === '월간 보고');
+    const lastEvent = eventsToDelete.find((e) => e.date === '2025-12-15');
+
+    await act(async () => {
+      await result.current.deleteEvent(lastEvent!.id);
+    });
+
+    // Then: 마지막만 삭제되고 나머지는 유지됨
+    await waitFor(() => {
+      const remainingEvents = result.current.events.filter((e) => e.title === '월간 보고');
+      expect(remainingEvents.length).toBe(2); // 10/15, 11/15만 남음
+
+      const deletedEvent = remainingEvents.find((e) => e.date === '2025-12-15');
+      expect(deletedEvent).toBeUndefined(); // 12/15는 삭제됨
+
+      const firstEvent = remainingEvents.find((e) => e.date === '2025-10-15');
+      const secondEvent = remainingEvents.find((e) => e.date === '2025-11-15');
+      expect(firstEvent).toBeDefined(); // 10/15는 유지됨
+      expect(secondEvent).toBeDefined(); // 11/15는 유지됨
+    });
+  });
+});
+
 describe('반복 정보 변경 검증', () => {
   it('원래 단일 일정을 수정해도 단일 일정으로 유지된다', async () => {
     // Given: 빈 상태에서 시작
