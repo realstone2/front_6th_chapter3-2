@@ -71,25 +71,24 @@ export const generateRepeatEvents = (eventData: Event | EventForm): Omit<Event, 
   } else {
     switch (eventData.repeat.type) {
       case 'daily':
-        // 30일 후
-        defaultEndDate = new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+        // 2025-10-30까지
+        defaultEndDate = new Date('2025-10-30');
         break;
       case 'weekly':
-        // 한 달 후 (30일)
-        defaultEndDate = new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+        // 2025-10-30까지
+        defaultEndDate = new Date('2025-10-30');
         break;
       case 'monthly':
+        // 2025-10-30까지
+        defaultEndDate = new Date('2025-10-30');
+        break;
+      case 'yearly':
         // 1년 후
         defaultEndDate = new Date(startDate);
         defaultEndDate.setFullYear(defaultEndDate.getFullYear() + 1);
         break;
-      case 'yearly':
-        // 5년 후
-        defaultEndDate = new Date(startDate);
-        defaultEndDate.setFullYear(defaultEndDate.getFullYear() + 5);
-        break;
       default:
-        defaultEndDate = new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+        defaultEndDate = new Date('2025-10-30');
     }
   }
   const endDate = defaultEndDate;
