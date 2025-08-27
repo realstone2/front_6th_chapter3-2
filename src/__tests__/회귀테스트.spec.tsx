@@ -1,9 +1,10 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
+import { vi } from 'vitest';
 
 import { setupMockHandlerCreation } from '../__mocks__/handlersUtils';
 import App from '../App';
@@ -230,5 +231,52 @@ describe('회귀테스트: 반복일정과 기존 단일일정 충돌 검사', (
     // Then: 검색 결과 없음 메시지가 표시됨
     expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
     expect(screen.queryByText('매일 스탠드업')).not.toBeInTheDocument();
+  });
+
+  it('반복일정에 대한 알림이 각 일정마다 정상 동작한다', async () => {
+    // Given: 반복 일정들이 존재함
+    const now = new Date('2025-10-15T08:50:00'); // 8시 50분
+    vi.setSystemTime(now);
+
+    const repeatEvents: Event[] = [
+      {
+        id: '1',
+        title: '매일 스탠드업',
+        date: '2025-10-15',
+        startTime: '09:00', // 10분 후 시작
+        endTime: '09:30',
+        description: '팀 스탠드업 미팅',
+        location: '회의실 A',
+        category: '업무',
+        repeat: { type: 'daily', interval: 1 },
+        notificationTime: 10, // 10분 전 알림
+      },
+      {
+        id: '2',
+        title: '매일 스탠드업',
+        date: '2025-10-16',
+        startTime: '09:00', // 내일 같은 시간
+        endTime: '09:30',
+        description: '팀 스탠드업 미팅',
+        location: '회의실 A',
+        category: '업무',
+        repeat: { type: 'daily', interval: 1 },
+        notificationTime: 10, // 10분 전 알림
+      },
+    ];
+
+    setupMockHandlerCreation(repeatEvents);
+
+    // 일정 로딩 대기
+    await screen.findByText('일정 로딩 완료!');
+
+    // When: 첫 번째 반복일정의 알림 시간이 됨 (정확히 10분 전)
+    act(() => {
+      vi.setSystemTime(new Date('2025-10-15T08:50:00')); // 첫 번째 일정 10분 전
+      vi.advanceTimersByTime(1000); // 1초 경과로 알림 체크 트리거
+    });
+
+    // Then: 첫 번째 반복일정에 대한 알림이 나타남
+    expect(screen.getByText('10분 후 매일 스탠드업 일정이 시작됩니다.')).toBeInTheDocument();
   });
 });
