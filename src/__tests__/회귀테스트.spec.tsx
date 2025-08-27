@@ -267,6 +267,8 @@ describe('회귀테스트: 반복일정과 기존 단일일정 충돌 검사', (
 
     setupMockHandlerCreation(repeatEvents);
 
+    const { user } = setup(<App />);
+
     // 일정 로딩 대기
     await screen.findByText('일정 로딩 완료!');
 
