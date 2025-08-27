@@ -122,4 +122,113 @@ describe('회귀테스트: 반복일정과 기존 단일일정 충돌 검사', (
     // 일정이 성공적으로 생성되었는지 확인
     await screen.findByText('일정이 추가되었습니다.');
   });
+
+  it('반복일정이 검색 기능에 정상적으로 포함된다', async () => {
+    // Given: 반복 일정과 단일 일정이 혼재함
+    const existingEvents: Event[] = [
+      {
+        id: '1',
+        title: '기존 단일 회의',
+        date: '2025-10-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '중요한 단일 미팅',
+        location: '회의실 A',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+      {
+        id: '2',
+        title: '매일 운동',
+        date: '2025-10-15',
+        startTime: '18:00',
+        endTime: '19:00',
+        description: '헬스장에서 운동하기',
+        location: '헬스장',
+        category: '개인',
+        repeat: { type: 'daily', interval: 1 },
+        notificationTime: 10,
+      },
+      {
+        id: '3',
+        title: '매일 운동',
+        date: '2025-10-16',
+        startTime: '18:00',
+        endTime: '19:00',
+        description: '헬스장에서 운동하기',
+        location: '헬스장',
+        category: '개인',
+        repeat: { type: 'daily', interval: 1 },
+        notificationTime: 10,
+      },
+    ];
+
+    setupMockHandlerCreation(existingEvents);
+    const { user } = setup(<App />);
+
+    // 일정 로딩 대기
+    await screen.findByText('일정 로딩 완료!');
+
+    // When: "운동"으로 검색
+    const searchInput = screen.getByPlaceholderText('검색어를 입력하세요');
+    await user.type(searchInput, '운동');
+
+    // Then: 반복일정들이 검색 결과에 나타남
+    const eventList = within(screen.getByTestId('event-list'));
+
+    expect(eventList.getAllByText('매일 운동')).toHaveLength(2); // 10/15, 10/16 두 개 모두
+    expect(eventList.getAllByText('헬스장에서 운동하기')).toHaveLength(2);
+    expect(eventList.queryByText('기존 단일 회의')).not.toBeInTheDocument(); // 검색어에 맞지 않음
+
+    // When: 검색어를 "회의"로 변경
+    await user.clear(searchInput);
+    await user.type(searchInput, '회의');
+
+    // Then: 반복일정들이 검색 결과에 나타남
+
+    // Then: 단일 일정만 검색 결과에 나타남
+    expect(eventList.getByText('기존 단일 회의')).toBeInTheDocument();
+    expect(eventList.queryByText('매일 운동')).not.toBeInTheDocument();
+
+    // When: 검색어를 "헬스장"으로 변경 (위치 기반 검색)
+    await user.clear(searchInput);
+    await user.type(searchInput, '헬스장');
+
+    // Then: 위치가 "헬스장"인 반복일정들이 검색됨
+    expect(eventList.getAllByText('매일 운동')).toHaveLength(2);
+    expect(eventList.queryByText('기존 단일 회의')).not.toBeInTheDocument();
+  });
+
+  it('반복일정이 있는 상태에서 검색 결과가 없으면 적절한 메시지를 표시한다', async () => {
+    // Given: 반복 일정만 존재함
+    const repeatEvents: Event[] = [
+      {
+        id: '1',
+        title: '매일 스탠드업',
+        date: '2025-10-15',
+        startTime: '09:00',
+        endTime: '09:30',
+        description: '팀 스탠드업 미팅',
+        location: '회의실 A',
+        category: '업무',
+        repeat: { type: 'daily', interval: 1 },
+        notificationTime: 10,
+      },
+    ];
+
+    setupMockHandlerCreation(repeatEvents);
+    const { user } = setup(<App />);
+
+    // 일정 로딩 대기
+    await screen.findByText('일정 로딩 완료!');
+
+    // When: 존재하지 않는 키워드로 검색
+    const searchInput = screen.getByPlaceholderText('검색어를 입력하세요');
+    await user.type(searchInput, '존재하지않는키워드');
+
+    // Then: 검색 결과 없음 메시지가 표시됨
+    expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+    expect(screen.queryByText('매일 스탠드업')).not.toBeInTheDocument();
+  });
 });
