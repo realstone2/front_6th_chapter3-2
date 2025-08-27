@@ -26,15 +26,34 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
     try {
       let response;
       if (editing) {
-        response = await fetch(`/api/events/${(eventData as Event).id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(eventData),
-        });
+        // 반복 일정이 단일 일정으로 수정되는 경우 처리
+        const currentEvent = events.find((e) => e.id === (eventData as Event).id);
+        const wasRepeating = currentEvent?.repeat.type !== 'none';
+        const isNowSingle = eventData.repeat.type === 'none';
+
+        // 반복 일정을 단일 일정으로 변경하는 경우
+        if (wasRepeating && isNowSingle) {
+          // 단일 일정으로 변경: repeat.interval을 0으로 설정
+          const singleEventData = {
+            ...eventData,
+            repeat: { type: 'none' as const, interval: 0 },
+          };
+          response = await fetch(`/api/events/${(eventData as Event).id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(singleEventData),
+          });
+        } else {
+          response = await fetch(`/api/events/${(eventData as Event).id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(eventData),
+          });
+        }
       } else {
         // 반복 일정인지 확인
         const isRepeating = eventData.repeat.type !== 'none';
-        
+
         if (isRepeating) {
           // 반복 일정인 경우 eventList API 사용
           const repeatEvents = generateRepeatEvents(eventData);
