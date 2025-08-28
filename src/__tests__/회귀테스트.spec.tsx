@@ -6,7 +6,7 @@ import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 import { vi } from 'vitest';
 
-import { setupMockHandlerCreation } from '../__mocks__/handlersUtils';
+import { setupMockHandlerCreation, setupMockHandlerListCreation } from '../__mocks__/handlersUtils';
 import App from '../App';
 import { Event } from '../types';
 
@@ -92,8 +92,11 @@ describe('회귀테스트: 반복일정과 기존 단일일정 충돌 검사', (
       notificationTime: 10,
     };
 
-    setupMockHandlerCreation([existingEvent]);
+    setupMockHandlerListCreation([existingEvent]);
     const { user } = setup(<App />);
+
+    // 일정 로딩 대기
+    await screen.findByText('일정 로딩 완료!');
 
     // When: 기존 일정과 시간이 겹치지 않는 반복 일정을 생성
     await user.click(screen.getAllByText('일정 추가')[0]);
