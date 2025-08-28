@@ -45,6 +45,7 @@ import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
 // import { Event, EventForm, RepeatType } from './types';
 import { Event, EventForm, RepeatType } from './types';
+import { RepeatSettings } from './components/RepeatSettings';
 import {
   formatDate,
   formatMonth,
@@ -456,57 +457,16 @@ function App() {
             </Select>
           </FormControl>
 
-          {/* ! 반복은 8주차 과제에 포함됩니다. 구현하고 싶어도 참아주세요~ */}
+          {/* 반복 설정 UI */}
           {isRepeating && (
-            <Stack spacing={2}>
-              <FormControl fullWidth>
-                <FormLabel htmlFor="repeat-type">반복 유형</FormLabel>
-                <Select
-                  id="repeat-type"
-                  aria-labelledby="repeat-type"
-                  aria-label="반복 유형"
-                  size="small"
-                  value={repeatType === 'none' ? 'daily' : repeatType}
-                  onChange={(e) => setRepeatType(e.target.value as RepeatType)}
-                >
-                  <MenuItem data-testid="repeat-daily" value="daily">
-                    매일
-                  </MenuItem>
-                  <MenuItem data-testid="repeat-weekly" value="weekly">
-                    매주
-                  </MenuItem>
-                  <MenuItem data-testid="repeat-monthly" value="monthly">
-                    매월
-                  </MenuItem>
-                  <MenuItem data-testid="repeat-yearly" value="yearly">
-                    매년
-                  </MenuItem>
-                </Select>
-              </FormControl>
-              <Stack direction="row" spacing={2}>
-                <FormControl fullWidth>
-                  <FormLabel htmlFor="repeat-interval">반복 간격</FormLabel>
-                  <TextField
-                    id="repeat-interval"
-                    size="small"
-                    type="number"
-                    value={repeatInterval}
-                    onChange={(e) => setRepeatInterval(Number(e.target.value))}
-                    slotProps={{ htmlInput: { min: 1 } }}
-                  />
-                </FormControl>
-                <FormControl fullWidth>
-                  <FormLabel htmlFor="repeat-end-date">반복 종료일</FormLabel>
-                  <TextField
-                    id="repeat-end-date"
-                    size="small"
-                    type="date"
-                    value={repeatEndDate}
-                    onChange={(e) => setRepeatEndDate(e.target.value)}
-                  />
-                </FormControl>
-              </Stack>
-            </Stack>
+            <RepeatSettings
+              repeatType={repeatType}
+              repeatInterval={repeatInterval}
+              repeatEndDate={repeatEndDate}
+              onRepeatTypeChange={setRepeatType}
+              onRepeatIntervalChange={setRepeatInterval}
+              onRepeatEndDateChange={setRepeatEndDate}
+            />
           )}
 
           <Button
