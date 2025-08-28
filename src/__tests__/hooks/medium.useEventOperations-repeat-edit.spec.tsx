@@ -1,15 +1,15 @@
-import React from 'react';
-import { act, renderHook, waitFor, render, screen, within } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { act, renderHook, waitFor, render, screen, within } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
+import React from 'react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { setupMockHandlerListCreation } from '../../__mocks__/handlersUtils';
+import App from '../../App';
 import { useEventOperations } from '../../hooks/useEventOperations';
 import { Event, EventForm } from '../../types';
-import App from '../../App';
 
 const theme = createTheme();
 

@@ -95,6 +95,7 @@ export const generateRepeatEvents = (eventData: Event | EventForm): Omit<Event, 
   let currentDate = new Date(startDate);
 
   while (currentDate && currentDate <= endDate) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...eventWithoutId } = eventData as Event;
     events.push({
       ...eventWithoutId,

@@ -4,9 +4,9 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 
+import { setupMockHandlerListCreation } from '../../__mocks__/handlersUtils';
 import App from '../../App';
 import { server } from '../../setupTests';
-import { setupMockHandlerListCreation } from '../../__mocks__/handlersUtils';
 
 const theme = createTheme();
 

@@ -1,12 +1,4 @@
-import {
-  Notifications,
-  ChevronLeft,
-  ChevronRight,
-  Delete,
-  Edit,
-  Close,
-  Repeat,
-} from '@mui/icons-material';
+import { Notifications, ChevronLeft, ChevronRight, Delete, Edit, Close } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
@@ -25,12 +17,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   Tooltip,
   Typography,
@@ -38,20 +24,18 @@ import {
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
+import { CalendarView } from './components/CalendarView';
+import { RepeatSettings } from './components/RepeatSettings';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
 // import { Event, EventForm, RepeatType } from './types';
-import { Event, EventForm, RepeatType } from './types';
-import { RepeatSettings } from './components/RepeatSettings';
-import { EventStatusIcons } from './components/EventStatusIcons';
-import { CalendarView } from './components/CalendarView';
-import { categories, weekDays, notificationOptions } from '../md/constants/index.ts';
-import { formatDate } from './utils/dateUtils';
+import { Event, EventForm } from './types';
 import { findOverlappingEvents } from './utils/eventOverlap';
 import { getTimeErrorMessage } from './utils/timeValidation';
+import { categories, notificationOptions } from '../md/constants/index.ts';
 
 function App() {
   const {

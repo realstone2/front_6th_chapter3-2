@@ -9,6 +9,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+
 import { Event } from '../types';
 import { EventStatusIcons } from './EventStatusIcons';
 import { weekDays } from '../../md/constants';

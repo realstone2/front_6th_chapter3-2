@@ -14,7 +14,7 @@ export const useEventForm = (initialEvent?: Event) => {
   const [location, setLocation] = useState(initialEvent?.location || '');
   const [category, setCategory] = useState(initialEvent?.category || '업무');
   const [isRepeating, setIsRepeating] = useState(false);
-  
+
   // 반복 체크박스 상태 변경 시 repeatType 동기화
   const handleIsRepeatingChange = (checked: boolean) => {
     setIsRepeating(checked);

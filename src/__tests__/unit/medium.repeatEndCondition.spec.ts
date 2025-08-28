@@ -1,5 +1,5 @@
-import { generateRepeatEvents } from '../../utils/repeatUtils';
 import { EventForm } from '../../types';
+import { generateRepeatEvents } from '../../utils/repeatUtils';
 
 describe('반복 종료 조건 테스트', () => {
   describe('기본 종료 날짜 설정', () => {

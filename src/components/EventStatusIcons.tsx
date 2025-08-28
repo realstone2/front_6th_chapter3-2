@@ -1,4 +1,5 @@
 import { Notifications, Repeat } from '@mui/icons-material';
+
 import { Event } from '../types';
 
 interface EventStatusIconsProps {
