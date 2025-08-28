@@ -17,7 +17,6 @@ const getDaysInMonth = (year: number, month: number): number => {
 const getNextMonthlyDate = (date: Date, interval: number): Date | null => {
   const originalDay = date.getDate();
   const originalMonth = date.getMonth();
-  const originalYear = date.getFullYear();
 
   // 다음 월 계산
   const nextDate = new Date(date);

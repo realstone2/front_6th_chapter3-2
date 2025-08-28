@@ -3,10 +3,12 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
+import React from 'react';
 
 import App from '../../App';
 import { server } from '../../setupTests';
 import { setupMockHandlerListCreation } from '../../__mocks__/handlersUtils';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 const theme = createTheme();
 
@@ -82,7 +84,7 @@ describe('반복 일정 엣지 케이스 비즈니스 로직', () => {
 
     // 폼이 리셋되었는지 확인 (일정 추가 성공 시 폼이 초기화됨)
     const titleInputAfter = screen.getByLabelText('제목');
-    expect(titleInputAfter.value).toBe(''); // 폼 리셋 확인으로 성공 검증
+    expect(titleInputAfter).toHaveValue(''); // 폼 리셋 확인으로 성공 검증
   });
 
   it('윤년 2월 29일에 매년 반복 생성 시 평년에는 일정이 생성되지 않는다', async () => {
@@ -133,7 +135,7 @@ describe('반복 일정 엣지 케이스 비즈니스 로직', () => {
 
     // 폼이 리셋되었는지 확인 (일정 추가 성공 시 폼이 초기화됨)
     const titleInputAfter = screen.getByLabelText('제목');
-    expect(titleInputAfter.value).toBe(''); // 폼 리셋 확인으로 성공 검증
+    expect(titleInputAfter).toHaveValue(''); // 폼 리셋 확인으로 성공 검증
   });
 
   it('반복 종료일 조건을 준수한다 (2025-10-30 최대)', async () => {
@@ -184,6 +186,6 @@ describe('반복 일정 엣지 케이스 비즈니스 로직', () => {
 
     // 폼이 리셋되었는지 확인 (일정 추가 성공 시 폼이 초기화됨)
     const titleInputAfter = screen.getByLabelText('제목');
-    expect(titleInputAfter.value).toBe(''); // 폼 리셋 확인으로 성공 검증
+    expect(titleInputAfter).toHaveValue(''); // 폼 리셋 확인으로 성공 검증
   });
 });

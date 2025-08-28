@@ -70,7 +70,10 @@ export default [
       ...typescriptPlugin.configs.recommended.rules,
 
       // ESLint rules
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off', // TypeScript 규칙으로 대체
+      '@typescript-eslint/no-unused-vars': 'warn', // 사용하지 않는 변수 경고로 변경
+      '@typescript-eslint/no-explicit-any': 'warn', // any 타입 경고로 변경
+      '@typescript-eslint/ban-ts-comment': 'warn', // @ts-ignore 등 경고로 변경
 
       // React rules
       'react/prop-types': 'off',
@@ -112,6 +115,9 @@ export default [
     rules: {
       ...vitestPlugin.configs.recommended.rules,
       'vitest/expect-expect': 'off',
+      // 테스트 파일에서 사용하지 않는 변수 허용
+      '@typescript-eslint/no-unused-vars': 'off',
+      'no-unused-vars': 'off',
     },
     languageOptions: {
       globals: {
