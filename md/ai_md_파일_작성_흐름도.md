@@ -15,6 +15,7 @@
 5. 지금까지 작성된 md파일들을 활용하여 테스트 작성 시작
    <img width="517" height="421" alt="image" src="https://github.com/user-attachments/assets/d6b04258-3bee-44a4-8509-512293f9b907" />
 6. 작성 완료된 테스트 코드들을 간단한것 부터 하나씩 작업 진행
+   <img width="562" height="620" alt="image" src="https://github.com/user-attachments/assets/8f349d54-b379-44e9-a86c-24dab908d620" />
 
 ## 1번 기능 작업 후기
 
